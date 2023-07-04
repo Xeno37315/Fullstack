@@ -24,7 +24,7 @@ router.post('/createGame', async (req, res) => {
     .save()
     .then((results) => {
       return res.status(200).json({
-        message: results,
+        data: results,
       });
     })
     .catch((error) => {
@@ -47,7 +47,7 @@ router.post('/createGenre', async (req, res) => {
     .save()
     .then((results) => {
       return res.status(200).json({
-        message: results,
+        data: results,
       });
     })
     .catch((error) => {
@@ -62,7 +62,7 @@ router.get('/readAllGames', async (req, res) => {
     .populate('genreId')
     .then((gamesList) => {
       return res.status(200).json({
-        message: gamesList,
+        data: gamesList,
       });
     })
     .catch((error) => {

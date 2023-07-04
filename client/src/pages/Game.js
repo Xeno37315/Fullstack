@@ -12,15 +12,16 @@ export default function Game() {
 
   const [games, setGames] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState('');
 
-  const [gameName, setGameName] = useState('');
-  const [gamePrice, setGamePrice] = useState('');
-  const [gameDescription, setDescription] = useState('');
-  const [gameImage, setGameImage] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('');
+  const [selectedGameName, setSelectedGameName] = useState('');
+  const [selectedGamePrice, setSelectedGamePrice] = useState('');
+  const [selectedGameDescription, setSelectedGameDescription] = useState('');
+  const [selectedGameImage, setSelectedGameImage] = useState('');
 
   useEffect(() => {
     LoadGenres();
+    LoadGames();
   }, []);
 
   const LoadGenres = async () => {
@@ -29,25 +30,20 @@ export default function Game() {
     setGenres(data.data);
   };
 
-  const TestFunc = async () => {
-    await axios
-      .post(baseURL + '/newReview')
-      .then((result) => {
-        // console.log(result.data);
-      })
-      .catch((err) => {
-        console.log(err.response.data.message);
-      });
+  const LoadGames = async () => {
+    const res = await axios.get(baseURL + '/readAllGames');
+    const data = res.data;
+    setGames(data.data);
   };
 
   const addNewGame = async () => {
-    if (gameName !== '' && gamePrice !== '' && selectedGenre !== null) {
+    if (selectedGameName !== '' && selectedGamePrice !== '' && selectedGenre !== null) {
       const new_game = {
         genreId: selectedGenre,
-        gameName: gameName,
-        gamePrice: gamePrice,
-        gameDescription: gameDescription,
-        gameImage: gameImage,
+        gameName: selectedGameName,
+        gamePrice: selectedGamePrice,
+        gameDescription: selectedGameDescription,
+        gameImage: selectedGameImage,
       };
       await axios
         .post(baseURL + '/createGame', new_game)
@@ -59,10 +55,10 @@ export default function Game() {
           toast.error(error.message);
         });
 
-      setGameName('');
-      setGamePrice('');
-      setDescription('');
-      setGameImage('');
+      // setSelectedGameName('');
+      // setSelectedGamePrice('');
+      // setSelectedDescription('');
+      // setSelectedGameImage('');
     } else {
       toast.error('GameName and price are require');
     }
@@ -102,36 +98,36 @@ export default function Game() {
             <p>{selectedGenre}</p>
             <Form.Control
               type='text'
-              value={gameName}
+              value={selectedGameName}
               onChange={(e) => {
-                setGameName(e.target.value);
+                setSelectedGameName(e.target.value);
               }}
               placeholder='Game name'
               style={{ marginTop: 10 }}
             />
             <Form.Control
               type='text'
-              value={gamePrice}
+              value={selectedGamePrice}
               onChange={(e) => {
-                setGamePrice(e.target.value);
+                setSelectedGamePrice(e.target.value);
               }}
               placeholder='Game price'
               style={{ marginTop: 10 }}
             />
             <Form.Control
               type='text'
-              value={gameDescription}
+              value={selectedGameDescription}
               onChange={(e) => {
-                setDescription(e.target.value);
+                setSelectedGameDescription(e.target.value);
               }}
               placeholder='Game description'
               style={{ marginTop: 10 }}
             />
             <Form.Control
               type='text'
-              value={gameImage}
+              value={selectedGameImage}
               onChange={(e) => {
-                setGameImage(e.target.value);
+                setSelectedGameImage(e.target.value);
               }}
               placeholder='Game image'
               style={{ marginTop: 10 }}
@@ -141,6 +137,14 @@ export default function Game() {
             </Button>
           </Form>
         </Col>
+      </Row>
+      <Row style={{ marginTop: 10 }}>
+        <div className='cards'>
+          {games &&
+            games.map((game) => (
+              <GameItem name={game.gameName} price={game.gamePrice} image={game.gameImage} />
+            ))}
+        </div>
       </Row>
     </Container>
   );
