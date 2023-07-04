@@ -6,18 +6,21 @@ import { FcPlus, FcEditImage, FcAddDatabase } from 'react-icons/fc';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import ModalItemGame from '../components/ModalItemGame';
 
 export default function Game() {
   const baseURL = 'http://localhost:3004/api';
 
   const [games, setGames] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [game, setGame] = useState();
 
   const [selectedGenre, setSelectedGenre] = useState('');
   const [selectedGameName, setSelectedGameName] = useState('');
   const [selectedGamePrice, setSelectedGamePrice] = useState('');
   const [selectedGameDescription, setSelectedGameDescription] = useState('');
   const [selectedGameImage, setSelectedGameImage] = useState('');
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     LoadGenres();
@@ -77,12 +80,17 @@ export default function Game() {
   //   };
 
   return (
-    <Container>
+    <div>
       <ToastContainer />
 
-      <Row style={{ marginTop: 100 }}>
+      <Row>
+      {openModal && <ModalItemGame 
+        setOpenModal={setOpenModal}
+        genres={genres}
+        game={game}
+      />}
         <Col xl={3} xs={12}>
-          <Form>
+          <Form style={{ marginTop: 100 }}>
             <Form.Select>
               <option>Select Genre</option>
               {genres.length > 0 &&
@@ -149,11 +157,16 @@ export default function Game() {
                 key={index}
                 gameName={game.gameName}
                 gamePrice={game.gamePrice}
+                gameDescription={game.gameDescription}
                 gameImage={game.gameImage}
+                openModal={openModal}
+                setOpenModal={setOpenModal}
+                setGame={setGame}
               />
             ))}
         </div>
       </Row>
-    </Container>
+      
+    </div>
   );
 }

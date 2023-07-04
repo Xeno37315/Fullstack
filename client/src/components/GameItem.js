@@ -3,7 +3,6 @@ import { Button, Container, Row, Col, Form, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Icon } from '@iconify/react';
 import './styles/GameItem.css';
-import ModalItemGame from './ModalItemGame';
 
 const GameItem = (props) => {
   const baseURL = 'http://localhost:3004/api';
@@ -11,6 +10,7 @@ const GameItem = (props) => {
   const [isEditable, setIsEditable] = useState(true);
   const [gameName, setGameName] = useState(props.gameName);
   const [gamePrice, setGamePrice] = useState(props.gamePrice);
+  const [gameDescription, setGameDescription] = useState(props.gameDescription)
   const [gameImage, setGameImage] = useState(props.gameImage);
   const [isActive, setIsActive] = useState(true);
   const [favorites, setFavorites] = useState(0);
@@ -34,8 +34,15 @@ const GameItem = (props) => {
   };
 
   const editItem = () => {
-    console.log(123);
-    return <ModalItemGame gameName={gameName} gamePrice={gamePrice} />;
+    if(!props.openModal) {
+      props.setGame({
+        gameName: gameName,
+        gamePrice: gamePrice,
+        gameDescription: gameDescription,
+        gameImage: gameImage
+      })
+      props.setOpenModal(true);
+    }
   };
 
   const addFavorites = async () => {};
