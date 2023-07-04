@@ -24,10 +24,6 @@ export default function Game() {
     LoadGames();
   }, []);
 
-  useEffect(() => {
-    LoadGames();
-  }, [games]);
-
   const LoadGenres = async () => {
     const res = await axios.get(baseURL + '/readAllGenres');
     const data = res.data;
@@ -37,6 +33,7 @@ export default function Game() {
   const LoadGames = async () => {
     const res = await axios.get(baseURL + '/readAllGames');
     const data = res.data;
+    console.log(data.data);
     setGames(data.data);
   };
 
@@ -63,6 +60,7 @@ export default function Game() {
       // setSelectedGamePrice('');
       // setSelectedDescription('');
       // setSelectedGameImage('');
+      LoadGames();
     } else {
       toast.error('GameName and price are require');
     }
@@ -142,11 +140,13 @@ export default function Game() {
           </Form>
         </Col>
       </Row>
+
       <Row style={{ marginTop: 10 }}>
-        <div className='cards'>
+        <div className='cards' style={{ flexDirection: 'row' }}>
           {games &&
-            games.map((game) => (
+            games.map((game, index) => (
               <GameItem
+                key={index}
                 gameName={game.gameName}
                 gamePrice={game.gamePrice}
                 gameImage={game.gameImage}
