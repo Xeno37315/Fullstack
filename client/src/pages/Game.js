@@ -24,6 +24,10 @@ export default function Game() {
     LoadGames();
   }, []);
 
+  useEffect(() => {
+    LoadGames();
+  }, [games]);
+
   const LoadGenres = async () => {
     const res = await axios.get(baseURL + '/readAllGenres');
     const data = res.data;
@@ -142,7 +146,11 @@ export default function Game() {
         <div className='cards'>
           {games &&
             games.map((game) => (
-              <GameItem name={game.gameName} price={game.gamePrice} image={game.gameImage} />
+              <GameItem
+                gameName={game.gameName}
+                gamePrice={game.gamePrice}
+                gameImage={game.gameImage}
+              />
             ))}
         </div>
       </Row>
