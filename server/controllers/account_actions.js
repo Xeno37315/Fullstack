@@ -1,8 +1,8 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import bcryptjs from 'bcryptjs'; //Password crypt
-import jwt from 'jsonwebtoken'; //Manage TOKENS
-import Account from '../models/account.js';
+import express from "express";
+import mongoose from "mongoose";
+import bcryptjs from "bcryptjs"; //Password crypt
+import jwt from "jsonwebtoken"; //Manage TOKENS
+import Account from "../models/account.js";
 
 function generateRandomIntegerInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -10,7 +10,7 @@ function generateRandomIntegerInRange(min, max) {
 
 const router = express.Router();
 
-router.post('/createAccount', async (req, res) => {
+router.post("/createAccount", async (req, res) => {
   const user = req.body.user;
   const id = new mongoose.Types.ObjectId();
 
@@ -18,7 +18,7 @@ router.post('/createAccount', async (req, res) => {
     .then(async (account) => {
       if (account) {
         return res.status(401).json({
-          message: 'Account is not available',
+          message: "Account is not available",
         });
       } else {
         const hash = await bcryptjs.hash(user.password, 10);
@@ -53,7 +53,7 @@ router.post('/createAccount', async (req, res) => {
     });
 });
 
-router.post('/login', async (req, res) => {
+router.post("/login", async (req, res) => {
   const user = req.body.user;
   Account.findOne({ email: user.email })
     .then(async (account) => {
@@ -72,12 +72,12 @@ router.post('/login', async (req, res) => {
           });
         } else {
           return res.status(401).json({
-            message: 'Password not match or account not verified yet',
+            message: "Password not match or account not verified yet",
           });
         }
       } else {
         return res.status(401).json({
-          message: 'Account not exist',
+          message: "Account not exist",
         });
       }
     })
@@ -88,10 +88,13 @@ router.post('/login', async (req, res) => {
     });
 });
 
-router.put('/verifyAccount', async (req, res) => {
+router.put("/verifyAccount", async (req, res) => {
   const verify = req.body.verify;
   console.log(verify);
-  Account.findOne({ email: verify.email, verficationCode: verify.verficationCode })
+  Account.findOne({
+    email: verify.email,
+    verficationCode: verify.verficationCode,
+  })
     .then((account) => {
       if (account) {
         account.isVerified = true;
@@ -107,7 +110,7 @@ router.put('/verifyAccount', async (req, res) => {
           });
       } else {
         return res.status(401).json({
-          message: 'Something went wrong...',
+          message: "Something went wrong...",
         });
       }
     })

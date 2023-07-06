@@ -1,4 +1,4 @@
-import { getGenres } from '../controllers/game_actions.js';
+import { getGenres } from "../controllers/game_actions.js";
 
 export const requestSuccess = async (data) => {
   data.success = true;

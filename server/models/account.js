@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const accountSchema = new Schema({
@@ -12,4 +12,4 @@ const accountSchema = new Schema({
   mobile: String,
 });
 
-export default mongoose.model('Account', accountSchema);
+export default mongoose.model("Account", accountSchema);

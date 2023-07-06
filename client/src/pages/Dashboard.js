@@ -1,19 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Container, Row, Col, Form, Card, Table, Modal } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { FcPlus, FcEditImage } from 'react-icons/fc';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import moment from 'moment';
-import { NavLink } from 'react-router-dom';
-import { VscChevronRight } from 'react-icons/vsc';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  Container,
+  Row,
+  Col,
+  Form,
+  Card,
+  Table,
+  Modal,
+} from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { FcPlus, FcEditImage } from "react-icons/fc";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import moment from "moment";
+import { NavLink } from "react-router-dom";
+import { VscChevronRight } from "react-icons/vsc";
+import axios from "axios";
 
-import RowEdit from '../components/RowEdit';
-import Header from '../components/Header';
+import RowEdit from "../components/RowEdit";
+import Header from "../components/Header";
 
 const Dashboard = (props) => {
-  const [deviceName, setdeviceName] = useState('');
+  const [deviceName, setdeviceName] = useState("");
   const [price, setprice] = useState(0);
   const [reviews, setreviews] = useState([]);
   const [gallery, setgallery] = useState([]);
@@ -21,14 +30,14 @@ const Dashboard = (props) => {
 
   const [counter, setCounter] = useState(0);
   const [rowItem, setRowItem] = useState({
-    title: '',
-    review: '',
+    title: "",
+    review: "",
     tid: 0,
   });
 
   const [imageRow, setImageRow] = useState({
-    imageSource: '',
-    imageDesc: '',
+    imageSource: "",
+    imageDesc: "",
   });
 
   const { title, review, tid } = rowItem;
@@ -36,7 +45,7 @@ const Dashboard = (props) => {
 
   //FUNCTIONS
   const addReviewToList = () => {
-    if (title !== '' && review !== '') {
+    if (title !== "" && review !== "") {
       setCounter(counter + 1);
       let row = {
         tid: counter,
@@ -46,12 +55,12 @@ const Dashboard = (props) => {
       };
       setreviews((reviews) => [...reviews, row]);
     } else {
-      toast.error('All inputs are required');
+      toast.error("All inputs are required");
     }
   };
 
   const addImageToGallery = () => {
-    if (imageSource !== '' && imageDesc !== '') {
+    if (imageSource !== "" && imageDesc !== "") {
       setCounter(counter + 1);
       let row = {
         tid: counter,
@@ -60,7 +69,7 @@ const Dashboard = (props) => {
       };
       setgallery((gallery) => [...gallery, row]);
     } else {
-      toast.error('All inputs are required');
+      toast.error("All inputs are required");
     }
   };
 
@@ -75,7 +84,7 @@ const Dashboard = (props) => {
     let new_title, new_review;
     let erow;
 
-    if (e.target.name === 'title') {
+    if (e.target.name === "title") {
       new_title = e.target.value;
 
       erow = reviews.map((item) => {
@@ -97,8 +106,8 @@ const Dashboard = (props) => {
     setreviews(erow);
   };
 
-  const preset_key = 'vq1ypl7h';
-  const cloud_name = 'da9u18hd0';
+  const preset_key = "vq1ypl7h";
+  const cloud_name = "da9u18hd0";
 
   const onItemChange = (e) => {
     setRowItem((prev) => ({
@@ -108,15 +117,18 @@ const Dashboard = (props) => {
   };
 
   const onImageChange = async (e) => {
-    let value = '';
+    let value = "";
 
-    if (e.target.name === 'imageSource') {
+    if (e.target.name === "imageSource") {
       const file = e.target.files[0];
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', preset_key);
+      formData.append("file", file);
+      formData.append("upload_preset", preset_key);
       axios
-        .post(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, formData)
+        .post(
+          `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+          formData
+        )
         .then(async (results) => {
           value = await results.data.secure_url;
           setImageRow((prev) => ({
@@ -136,7 +148,7 @@ const Dashboard = (props) => {
     }
   };
 
-  const baseURL = 'http://localhost:3001/api';
+  const baseURL = "http://localhost:3001/api";
 
   const [search, setSearch] = useState(null);
 
@@ -159,7 +171,7 @@ const Dashboard = (props) => {
     };
 
     axios
-      .post(baseURL + '/account/createDevice', { device })
+      .post(baseURL + "/account/createDevice", { device })
       .then((results) => {
         console.log(results);
       })
@@ -210,30 +222,34 @@ const Dashboard = (props) => {
           <Col xl={5}>
             <Form.Control
               value={title}
-              name='title'
+              name="title"
               onChange={(e) => {
                 onItemChange(e);
               }}
-              type='text'
-              placeholder='Type your title...'
+              type="text"
+              placeholder="Type your title..."
             />
           </Col>
           <Col xl={5}>
             <Form.Control
               value={review}
-              name='review'
+              name="review"
               onChange={(e) => {
                 onItemChange(e);
               }}
-              type='text'
-              placeholder='Type your review...'
+              type="text"
+              placeholder="Type your review..."
             />
           </Col>
           <Col xl={2}>
-            <Button onClick={addReviewToList} variant='outline-success'>
+            <Button onClick={addReviewToList} variant="outline-success">
               <FcPlus size={30} />
             </Button>
-            <Button style={{ marginLeft: 10 }} onClick={editList} variant='outline-info'>
+            <Button
+              style={{ marginLeft: 10 }}
+              onClick={editList}
+              variant="outline-info"
+            >
               <FcEditImage size={30} />
             </Button>
           </Col>
@@ -267,14 +283,19 @@ const Dashboard = (props) => {
                             <td>{item.tid}</td>
                             <td>{item.title}</td>
                             <td>{item.review}</td>
-                            <td>{moment(item.createdAt).format('DD/MM/YYYY hh:mm:ss')}</td>
+                            <td>
+                              {moment(item.createdAt).format(
+                                "DD/MM/YYYY hh:mm:ss"
+                              )}
+                            </td>
                             <td>
                               <NavLink
-                                key={'reviewKey'}
-                                to='/review-details'
+                                key={"reviewKey"}
+                                to="/review-details"
                                 state={{ reviewState: item }}
-                                className='btn btn-info'>
-                                <VscChevronRight color='#ffffff' size={30} />
+                                className="btn btn-info"
+                              >
+                                <VscChevronRight color="#ffffff" size={30} />
                               </NavLink>
                             </td>
                           </tr>
@@ -291,8 +312,8 @@ const Dashboard = (props) => {
         <Row>
           <Col xl={5}>
             <Form.Control
-              name='imageSource'
-              type='file'
+              name="imageSource"
+              type="file"
               onChange={(e) => {
                 onImageChange(e);
               }}
@@ -301,19 +322,23 @@ const Dashboard = (props) => {
           <Col xl={5}>
             <Form.Control
               value={imageDesc}
-              name='imageDesc'
+              name="imageDesc"
               onChange={(e) => {
                 onImageChange(e);
               }}
-              type='text'
-              placeholder='Type your description...'
+              type="text"
+              placeholder="Type your description..."
             />
           </Col>
           <Col xl={2}>
-            <Button onClick={addImageToGallery} variant='outline-success'>
+            <Button onClick={addImageToGallery} variant="outline-success">
               <FcPlus size={30} />
             </Button>
-            <Button style={{ marginLeft: 10 }} onClick={editList} variant='outline-info'>
+            <Button
+              style={{ marginLeft: 10 }}
+              onClick={editList}
+              variant="outline-info"
+            >
               <FcEditImage size={30} />
             </Button>
           </Col>
@@ -337,7 +362,10 @@ const Dashboard = (props) => {
                         {
                           <tr>
                             <td>
-                              <img src={item.imageSource} style={{ width: 200 }} />
+                              <img
+                                src={item.imageSource}
+                                style={{ width: 200 }}
+                              />
                             </td>
                             <td>{item.imageDesc}</td>
                             <td></td>

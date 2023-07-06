@@ -1,36 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Container, Row, Col, Form, Card } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Button, Container, Row, Col, Form, Card } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Auth = (props) => {
-  const baseURL = 'http://localhost:3004/api';
+  const baseURL = "http://localhost:3004/api";
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [code, setCode] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [code, setCode] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      navigate('/game');
+    if (localStorage.getItem("token")) {
+      navigate("/game");
     } else {
-      navigate('/');
+      navigate("/");
     }
   }, []);
 
-  const [authView, setAuthView] = useState('loginView');
+  const [authView, setAuthView] = useState("loginView");
   //registerView //verifyView //recoverView
 
   const createNewAccount = async () => {
-    if (firstName !== '' && lastName !== '' && email !== '' && password !== '') {
+    if (
+      firstName !== "" &&
+      lastName !== "" &&
+      email !== "" &&
+      password !== ""
+    ) {
       const user = {
         firstName: firstName,
         lastName: lastName,
@@ -39,52 +44,55 @@ const Auth = (props) => {
         mobile: mobile,
       };
       axios
-        .post(baseURL + '/account/createAccount', { user })
+        .post(baseURL + "/account/createAccount", { user })
         .then((results) => {
           toast.success(results.data.message.verficationCode);
-          localStorage.setItem('vdata', JSON.stringify(results.data.message.email));
-          setAuthView('verifyView');
+          localStorage.setItem(
+            "vdata",
+            JSON.stringify(results.data.message.email)
+          );
+          setAuthView("verifyView");
         })
         .catch((error) => {
           toast.error(error.response.data.message);
         });
     } else {
-      toast.error('All inputs are required!!!');
+      toast.error("All inputs are required!!!");
     }
   };
 
   const login = async () => {
-    if (email !== '' && password !== '') {
+    if (email !== "" && password !== "") {
       const user = {
         email: email,
         password: password,
       };
       axios
-        .post(baseURL + '/account/login', { user })
+        .post(baseURL + "/account/login", { user })
         .then((results) => {
           //toast.success(results.data.message);
           // console.log(results);
-          localStorage.setItem('token', JSON.stringify(results.data.message));
-          navigate('/game');
+          localStorage.setItem("token", JSON.stringify(results.data.message));
+          navigate("/game");
         })
         .catch((error) => {
           toast.error(error.response.data.message);
         });
     } else {
-      toast.error('All inputs are required!!!');
+      toast.error("All inputs are required!!!");
     }
   };
 
   const verifyMyCode = async () => {
-    if (code !== '') {
-      const remail = localStorage.getItem('vdata');
+    if (code !== "") {
+      const remail = localStorage.getItem("vdata");
       const verify = {
         email: JSON.parse(remail),
         verficationCode: code,
       };
 
       axios
-        .put(baseURL + '/account/verifyAccount', { verify })
+        .put(baseURL + "/account/verifyAccount", { verify })
         .then((results) => {
           toast.success(`Welcome ${results.data.message.firstName}`);
         })
@@ -107,13 +115,14 @@ const Auth = (props) => {
             style={{
               marginTop: 100,
               padding: 50,
-              textAlign: 'center',
-              backgroundColor: '#ffffff',
+              textAlign: "center",
+              backgroundColor: "#ffffff",
               borderRadius: 20,
-            }}>
-            <img src='../../logo.png' style={{ width: 200 }} />
+            }}
+          >
+            <img src="../../logo.png" style={{ width: 200 }} />
 
-            {authView === 'loginView' ? (
+            {authView === "loginView" ? (
               <>
                 <h3 style={{ marginTop: 15 }}>Welcome Aboard</h3>
                 <p>Type your email and password to login</p>
@@ -121,7 +130,7 @@ const Auth = (props) => {
                   <Form.Group>
                     <Form.Label>Email address</Form.Label>
                     <Form.Control
-                      type='email'
+                      type="email"
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
@@ -132,7 +141,7 @@ const Auth = (props) => {
                   <Form.Group>
                     <Form.Label>Password</Form.Label>
                     <Form.Control
-                      type='password'
+                      type="password"
                       value={password}
                       onChange={(e) => {
                         setPassword(e.target.value);
@@ -141,30 +150,35 @@ const Auth = (props) => {
                   </Form.Group>
 
                   <Button
-                    variant='primary'
-                    style={{ width: '100%', marginTop: 15 }}
-                    onClick={login}>
+                    variant="primary"
+                    style={{ width: "100%", marginTop: 15 }}
+                    onClick={login}
+                  >
                     Sign In
                   </Button>
                 </Form>
                 <Button
                   style={{ marginTop: 12 }}
-                  variant='light'
+                  variant="light"
                   onClick={() => {
-                    setAuthView('registerView');
-                  }}>
+                    setAuthView("registerView");
+                  }}
+                >
                   Don't have an account? Signup Now!
                 </Button>
               </>
-            ) : authView === 'registerView' ? (
+            ) : authView === "registerView" ? (
               <>
                 <h3 style={{ marginTop: 15 }}>Create New Account</h3>
-                <p>Type your first and last name, mobile, email and password to sign up</p>
+                <p>
+                  Type your first and last name, mobile, email and password to
+                  sign up
+                </p>
                 <Form>
                   <Form.Group>
                     <Form.Label>First name</Form.Label>
                     <Form.Control
-                      type='text'
+                      type="text"
                       value={firstName}
                       onChange={(e) => {
                         setFirstName(e.target.value);
@@ -175,7 +189,7 @@ const Auth = (props) => {
                   <Form.Group>
                     <Form.Label>Last name</Form.Label>
                     <Form.Control
-                      type='text'
+                      type="text"
                       value={lastName}
                       onChange={(e) => {
                         setLastName(e.target.value);
@@ -186,7 +200,7 @@ const Auth = (props) => {
                   <Form.Group>
                     <Form.Label>Mobile</Form.Label>
                     <Form.Control
-                      type='text'
+                      type="text"
                       value={mobile}
                       onChange={(e) => {
                         setMobile(e.target.value);
@@ -197,7 +211,7 @@ const Auth = (props) => {
                   <Form.Group>
                     <Form.Label>Email address</Form.Label>
                     <Form.Control
-                      type='email'
+                      type="email"
                       value={email}
                       onChange={(e) => {
                         setEmail(e.target.value);
@@ -208,7 +222,7 @@ const Auth = (props) => {
                   <Form.Group>
                     <Form.Label>Password</Form.Label>
                     <Form.Control
-                      type='password'
+                      type="password"
                       value={password}
                       onChange={(e) => {
                         setPassword(e.target.value);
@@ -217,22 +231,24 @@ const Auth = (props) => {
                   </Form.Group>
 
                   <Button
-                    variant='primary'
-                    style={{ width: '100%', marginTop: 15 }}
-                    onClick={createNewAccount}>
+                    variant="primary"
+                    style={{ width: "100%", marginTop: 15 }}
+                    onClick={createNewAccount}
+                  >
                     Sign Up
                   </Button>
                 </Form>
                 <Button
                   style={{ marginTop: 12 }}
-                  variant='light'
+                  variant="light"
                   onClick={() => {
-                    setAuthView('loginView');
-                  }}>
+                    setAuthView("loginView");
+                  }}
+                >
                   Back to login
                 </Button>
               </>
-            ) : authView === 'verifyView' ? (
+            ) : authView === "verifyView" ? (
               <>
                 <h3 style={{ marginTop: 15 }}>Verify code</h3>
                 <p>Please type your verification code</p>
@@ -240,7 +256,7 @@ const Auth = (props) => {
                   <Form.Group>
                     <Form.Label>Code</Form.Label>
                     <Form.Control
-                      type='text'
+                      type="text"
                       value={code}
                       onChange={(e) => {
                         setCode(e.target.value);
@@ -248,18 +264,20 @@ const Auth = (props) => {
                     />
                   </Form.Group>
                   <Button
-                    variant='primary'
-                    style={{ width: '100%', marginTop: 15 }}
-                    onClick={verifyMyCode}>
+                    variant="primary"
+                    style={{ width: "100%", marginTop: 15 }}
+                    onClick={verifyMyCode}
+                  >
                     Verify
                   </Button>
                 </Form>
                 <Button
                   style={{ marginTop: 12 }}
-                  variant='light'
+                  variant="light"
                   onClick={() => {
-                    setAuthView('loginView');
-                  }}>
+                    setAuthView("loginView");
+                  }}
+                >
                   Back to login
                 </Button>
               </>
